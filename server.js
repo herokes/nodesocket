@@ -1,14 +1,14 @@
 var io = require('socket.io');
 var port = process.env.PORT || 5000;
 
-// assuming io is the Socket.IO server object
-io.configure(function () { 
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10); 
-});
-
 var socket = io.listen(port, function() {
   console.log("Listening on " + port);
+});
+
+// assuming io is the Socket.IO server object
+socket.configure(function () { 
+  socket.set("transports", ["xhr-polling"]); 
+  socket.set("polling duration", 10); 
 });
 
 socket.sockets.on('connection',function(client){
