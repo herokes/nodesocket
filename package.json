@@ -1,12 +1,17 @@
 {
   	"name": "nodesocket",
 	"author": "Quang",
-	"description": "A Static File Site that sells domain names",
+	"description": "Test on heroku",
   	"version": "0.0.1",
+	"private": "true",
   	"dependencies": {
+		"express": "*",
+		"jade": "*",
+		"stylus": "*",
+		"nib": "*",
     	"socket.io": "*"
-  },
-  "engines": {
+	},
+	"engines": {
         "node": "0.10.6"
     }
 }
