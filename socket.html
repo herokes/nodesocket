@@ -1,0 +1,46 @@
+<html>
+    <head>
+    <title>WebSocket Client</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+		window.onload = function(){
+			var input = document.getElementById('input');
+			var output = document.getElementById('output');
+			var user = document.getElementById('user').innerHTML;
+	 
+			var socket = io.connect();
+	 
+			socket.on("connect",function(){
+				console.log("Connected to the server");
+			});
+			socket.on('messagereceived',function(data) {
+				var content = document.createTextNode(data);
+				var br = document.createElement('br');
+				output.appendChild(content);
+				output.appendChild(br);
+			});
+			socket.on('error', function (data) {
+				console.log("error:",data);
+			   }
+			);
+	 
+			window.sendMessage = function(){
+				var data = {name: user, mes: input.value};
+				socket.emit('messagesent', JSON.stringify(data));
+			};
+		}
+ 
+    </script>
+    </head>
+    <body>
+		<h2 id="user">User1</h2>
+        <input type='text' id='input' />
+        <div id='output'></div>
+        <br/>
+        <input type='button' id='send' value='send' onclick='sendMessage();' />
+		<select>
+			<option value="1"><</option>
+			<option value="2"><br</option>
+		</select>
+    </body>
+</html>

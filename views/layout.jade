@@ -1,15 +1,41 @@
 !!!5
 html
-  head
-    title #{title} - My Site
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    header
-      h1 Quang's Test Site
-    .container
-      .main-content
-        block content
-      .sidebar
-        block sidebar
-    footer
-      p Running on node with Express, Jade and Stylus
+	head
+		title #{title} - My Site
+		link(rel="stylesheet", href="/stylesheets/style.css")
+		script(src="/socket.io/socket.io.js")
+		script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+	body
+		header
+			h1 Quang's Test Site
+		.container
+			input#input(type="text")
+			button#send Send
+			#output
+		.container
+			.main-content
+				block content
+			.sidebar
+				block sidebar
+		footer
+			p Running on node with Express, Jade and Stylus
+		script
+			$(function(){
+				var input = $('#input');
+				var output = $('#output');
+				var user = $('#user').html();
+				var socket = io.connect();
+				socket.on("connect",function(){
+					console.log("Connected to the server");
+				});
+				socket.on('messagereceived',function(data) {
+					output.append('<div>' + data + '</div>');
+				});
+				socket.on('error', function (data) {
+					console.log("error:",data);
+				});
+				$('#send').click(function(){
+					var data = {name: user, mes: input.val()};
+					socket.emit('messagesent', JSON.stringify(data));
+				});
+			});

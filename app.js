@@ -6,7 +6,9 @@ var express = require('express'),
 	stylus = require('stylus'),
 	nib = require('nib');
 var app = express();
-var io = require('socket.io').listen(app);
+//Require for socket.io v0.9.x (need http server)
+var server = require('http').Server(app);
+var io = require('socket.io').listen(server);
 
 function compile(str, path) {
 	return stylus(str)
@@ -34,7 +36,7 @@ app.get('/', function (req, res) {
 });
 
 
-app.listen(port, function() {
+server.listen(port, function() {
   console.log("Listening on " + port);
 });
 
@@ -45,19 +47,19 @@ io.configure(function () {
   io.set("polling duration", 10); 
 });
 
-io.sockets.on('connection',function(client){
-        client.on('messagesent', function(data){
-			res = JSON.parse(data);
-            console.log('Received expression from client ', res.name + ': '+ res.mes);
-            // catch error for bad expression
-            try{
-				client.emit('messagereceived', res.name + ': '+ res.mes);
-				client.broadcast.emit('messagereceived', res.name + ': '+ res.mes);
-            }catch(err){
-                client.emit("error",err.message);
-            }
-        });
-        client.on('disconnect', function(){
-            console.log('Disconnected');
-        });
+io.on('connection',function(client){
+	client.on('messagesent', function(data){
+		res = JSON.parse(data);
+		console.log('Received expression from client ', res.name + ': '+ res.mes);
+		// catch error for bad expression
+		try{
+			client.emit('messagereceived', res.name + ': '+ res.mes);
+			client.broadcast.emit('messagereceived', res.name + ': '+ res.mes);
+		}catch(err){
+			client.emit("error",err.message);
+		}
+	});
+	client.on('disconnect', function(){
+		console.log('Disconnected');
+	});
 });
