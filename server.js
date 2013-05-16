@@ -1,6 +1,9 @@
 var io = require('socket.io');
 
-var socket = io.listen(5555);
+var port = process.env.PORT || 5000;
+io.listen(port, function() {
+  console.log("Listening on " + port);
+});
 socket.sockets.on('connection',function(client){
         client.on('messagesent', function(data){
 			res = JSON.parse(data);
