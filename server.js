@@ -1,5 +1,5 @@
 var io = require('socket.io');
- 
+
 var socket = io.listen(5555);
 socket.sockets.on('connection',function(client){
         client.on('messagesent', function(data){
